@@ -1,4 +1,8 @@
 
+
+
+
+
 {include file='user/main.tpl'}
 
 
@@ -11,18 +15,71 @@
 			<h1 class="content-heading">商品列表</h1>
 		</div>
 	</div>
-	<div class="container">
+  <!-- Part 2-->
+  <div class="container">
 		<div class="col-lg-12 col-sm-12">
 			<section class="content-inner margin-top-no">
-				
-				<div class="card">
-					<div class="card-main">
-						<div class="card-inner">
-							<p>当前余额：{$user->money} 元</p>
-						</div>
+      <div class="col-xs-6 col-sm-6 col-lg-4 col-md-4">
+	<div class="card">
+	<div class="card-main">
+	<div class="card-inner">
+	<p class="card-heading" style="margin-bottom:26px">可用余额</p>
+	<span style="font-size: 20px;color: #32b643;">￥</span>&nbsp;
+	<span style="color:#32b643;font-size: 28px;">{$user->money}</span>
+	</div>
+	<div class="card-action">
+	<div class="card-action-btn pull-left" style="margin-left:16px">
+	<p>
+	<a href="/user/code" class="btn btn-brand waves-attach waves-effect">立即充值</a>
+	<a href="/user/bought" class="btn waves-attach waves-effect">购买记录</a>
+	</p>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>				
+				<!--
+				<div class="table-responsive">
+					{$shops->render()}
+					<table class="table ">
+						<tr>
+							
+							    <th>ID</th>    
+							<th>套餐</th>
+							<th>价格</th>
+							<th>套餐详情</th>
+                                  <th>自动续费天数</th>
+                           	<th>续费时重置流量</th>     
+                           	<th>操作</th>
+                           	
+                           </tr>
+                           {foreach $shops as $shop}
+                           <tr>
+                           	
+                           	     <td>#{$shop->id}</td>    
+                           	<td>{$shop->name}</td>
+                           	<td>{$shop->price} 元</td>
+                           	<td>{$shop->content()}</td>
+							  	{if $shop->auto_renew==0}
+                                <td>不能自动续费</td>
+								{else}
+								<td>可选 在 {$shop->auto_renew} 天后自动续费</td>
+								{/if}
+								
+								{if $shop->auto_reset_bandwidth==0}
+                                <td>不自动重置</td>
+								{else}
+								<td>自动重置</td>
+								{/if}  
+								<td>
+									<a class="btn btn-brand-accent" href="javascript:void(0);" onClick="buy('{$shop->id}',{$shop->auto_renew},{$shop->auto_reset_bandwidth})">购买</a>
+								</td>
+							</tr>
+							{/foreach}
+						</table>
+						{$shops->render()}
 					</div>
-				</div>
-
+				-->
 					{$shops->render()}
 					{foreach $shops as $shop}
 					<div class="tile tile-collapse">
@@ -33,16 +90,25 @@
 						</div>
 						<div class="collapsible-region collapse" id="heading{$shop->id}" style="height: 0px;">
 							<div style="padding:18px">
+								<p class="card-heading">
+									<span>{$shop->name}</span>
+								</p>
+								<hr>
 								<h4 style="margin-top:12px">商品内容</h4>
 								<p></p><ul>
-									<li>{if $shop->reset()>0}每{$shop->reset()}天{/if}{$shop->bandwidth()}GB套餐流量</li>
-									{if $shop->expire() > 0}
-									<li>套餐有效期 {$shop->expire()} 天</li>
-									{/if}
-									{if $shop->user_class() > 0}
-									<li>升级为VIP{$shop->user_class()}</li>
+									{if $shop->speedlimit()==0}
+									<li>不限速</li>
 									{else}
+									<li>{$shop->speedlimit()}Mbps 速率</li>
 									{/if}
+									<li>每{$shop->reset_exp()}天{$shop->bandwidth()}GB套餐流量</li>
+									<li>套餐有效期 {$shop->expire()} 天</li>
+									{if $shop->connector()==0}
+									<li>不限制设备数</li>
+									{else}
+									<li>最多支持 {$shop->connector()} 个IP同时使用</li>
+									{/if}
+									<li>升级为VIP{$shop->user_class()}</li>
 								</ul><p></p>
 
 								<h4 style="margin-top:12px">续费</h4>
