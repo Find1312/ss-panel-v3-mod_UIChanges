@@ -944,7 +944,13 @@ class UserController extends BaseController
 
 
 
-
+    public function yhm($request, $response, $args)
+        {
+        return $this->view()->display('user/yhm.tpl');
+        }
+    
+    
+    
     public function edit($request, $response, $args)
     {
         $themes=Tools::getDir(BASE_PATH."/resources/views");
