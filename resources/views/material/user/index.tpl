@@ -39,6 +39,9 @@
 												<li {if $ssr_prefer}class="active"{/if}>
 													<a class="waves-attach" data-toggle="tab" href="#all_ssr"><i class="icon icon-lg">airplanemode_active</i>&nbsp;ShadowsocksR</a>
 												</li>
+												<li {if !$ssr_prefer}class="active"{/if}>
+													<a class="waves-attach" data-toggle="tab" href="#all_ss"><i class="icon icon-lg">flight_takeoff</i>&nbsp;Shadowsocks</a>
+												</li>
 											</ul>
 										</nav>
 										<div class="card-inner">
@@ -296,9 +299,22 @@
                                               <dd><i class="icon icon-md">event</i>&nbsp;不过期</dd>
                                               {/if}
 											</p>
+                                          	<p><dt>等级有效期</dt>
+                                              <i class="icon icon-md">event</i>
+                                              <span class="label-level-expire">剩余</span>
+											  <span id="days-level-expire"></span>
+                                              <span class="label-level-expire">天</span>
+                                            </p>
 
 											<p><dt>帐号过期时间</dt>
-											<dd><i class="icon icon-md">event</i>&nbsp;{$user->expire_in}</dd>
+											  <dd><i class="icon icon-md">event</i>&nbsp;{$user->expire_in}</dd>
+                                            </p>
+                                            <p><dt>账号有效期</dt>
+                                              <i class="icon icon-md">event</i>
+                                              <span class="label-account-expire">剩余</span>
+											  <span id="days-account-expire"></span>
+											  <span class="label-account-expire">天</span>
+                                           </p>
 
 											<p><dt>速度限制</dt>
 											{if $user->node_speedlimit!=0}
@@ -306,7 +322,7 @@
 											{else}
 											<dd><i class="icon icon-md">settings_input_component</i>&nbsp;不限速</dd>
 											{/if}</p>
-                                            <p><dt>在线设备数</dt>
+                                           <p><dt>在线设备数</dt>
 										    {if $user->node_connector!=0}
 											<dd><i class="icon icon-md">phonelink</i>&nbsp;{$user->online_ip_count()} / {$user->node_connector}</dd>
 											{else}
@@ -465,6 +481,40 @@
 
 <script src="/theme/material/js/shake.js/shake.js"></script>
 
+<script>
+/*
+ * Author: neoFelhz & CloudHammer
+ * https://github.com/CloudHammer/CloudHammer/make-sspanel-v3-mod-great-again
+ * License: MIT license & SATA license
+ */
+function CountDown() {
+    var levelExpire = Date.parse("{$user->class_expire}");
+    var accountExpire = Date.parse("{$user->expire_in}");
+    var nowDate = new Date();
+    var a = nowDate.getTime();
+    var b = levelExpire - a;
+    var c = accountExpire - a;
+    var levelExpireDays = Math.floor(b/(24*3600*1000));
+    var accountExpireDays = Math.floor(c/(24*3600*1000));
+    if (levelExpireDays < 0 || levelExpireDays > 315360000000) {
+        document.getElementById('days-level-expire').innerHTML = "无限期";
+        for (var i=0;i<document.getElementsByClassName('label-level-expire').length;i+=1){
+            document.getElementsByClassName('label-level-expire')[i].style.display = 'none';
+        }
+    } else {
+        document.getElementById('days-level-expire').innerHTML = levelExpireDays;
+    }
+    if (accountExpireDays < 0 || accountExpireDays > 315360000000) {
+        document.getElementById('days-account-expire').innerHTML = "无限期";
+        for (var i=0;i<document.getElementsByClassName('label-account-expire').length;i+=1){
+            document.getElementsByClassName('label-account-expire')[i].style.display = 'none';
+        }
+    } else {
+        document.getElementById('days-account-expire').innerHTML = accountExpireDays;
+    }
+}
+</script>
+
 
 <script>
 
@@ -477,6 +527,13 @@ $(".copy-text").click(function () {
 	$("#msg").html("已复制到您的剪贴板，请您继续接下来的操作。");
 });
 
+ {if $user->transfer_enable-($user->u+$user->d) == 0}	
+window.onload = function() {	
+    $("#result").modal();	
+    $("#msg").html("您的流量已经用完或账户已经过期了，如需继续使用，请进入商店选购新的套餐~");	
+};	
+ {/if}
+
 {if $geetest_html == null}
 
 
@@ -486,6 +543,7 @@ window.onload = function() {
     });
 
     myShakeEvent.start();
+  	CountDown()
 
     window.addEventListener('shake', shakeEventDidOccur, false);
 
