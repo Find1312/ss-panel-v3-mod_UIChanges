@@ -10,7 +10,17 @@
 							<div class="card-main">
 								<div class="card-header">
 									<div class="card-inner">
-										<h1 class="card-heading"><img src="/images/register.jpg" height=100% width=100% /></h1>
+										<!-- 这里可以取消掉注释换logo图。
+       14 +									<h1 class="card-heading"><img src="/images/register.jpg" height=100% width=100% /></h1>
+       15 +									-->
+       16 +									<h1 class="card-heading">
+       17 +										<div class="text" style=" text-align:center;">
+       18 +											欢迎来到
+       19 +										</div>
+       20 +										<div class="text" style=" text-align:center;font-weight: bold;">
+       21 +											{$config["appName"]}
+       22 +										</div>
+       23 +									</h1>
 									</div>
 								</div>
 								<div class="card-inner">
