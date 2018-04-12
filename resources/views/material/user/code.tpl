@@ -21,9 +21,27 @@
 		<div class="container">
 			<section class="content-inner margin-top-no">
 				<div class="row">
-
+         <div class="col-xs-6 col-sm-6 col-lg-4 col-md-4">
+	<div class="card">
+	<div class="card-main">
+	<div class="card-inner">
+	<p class="card-heading" style="margin-bottom:26px">可用余额</p>
+	<span style="font-size: 20px;color: #32b643;">￥</span>&nbsp;
+	<span style="color:#32b643;font-size: 28px;">{$user->money}</span>
+	</div>
+	<div class="card-action">
+	<div class="card-action-btn pull-left" style="margin-left:16px">
+	<p>
+	<a href="/user/code" class="btn btn-brand waves-attach waves-effect">立即充值</a>
+	<a href="/user/bought" class="btn waves-attach waves-effect">购买记录</a>
+	</p>
+	</div>
+	</div>
+	</div>
+	</div>
+	</div>
 				    {if $pmw!=''}
-					<div class="col-lg-12 col-md-12">
+					<div class="col-xs-6 col-sm-6 col-lg-4 col-md-4">
 						<div class="card margin-bottom-no">
 							<div class="card-main">
 								<div class="card-inner">
@@ -35,7 +53,7 @@
 
 					{/if}
 
-					<div class="col-lg-12 col-md-12">
+					<div class="col-xs-6 col-sm-6 col-lg-4 col-md-4">
 						<div class="card margin-bottom-no">
 							<div class="card-main">
 								<div class="card-inner">
