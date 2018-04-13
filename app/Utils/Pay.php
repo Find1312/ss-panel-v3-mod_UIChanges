@@ -25,7 +25,9 @@ class Pay
                 return Pay::yftpay_html($user);
             case 'codepay':
                 return Pay::codepay_html($user);
-            default:
+            case 'mikupay':
+                return Pay::mikupay_html($user);
+          	default:
                 return "";
         }
         return null;
@@ -39,6 +41,67 @@ class Pay
         return \App\Utils\DoiAMPay::render();
     }
 
+    public static function mikupay_html($user)
+    {
+        return '
+<nav class="tab-nav margin-top-no">
+	<ul class="nav nav-list">
+		<li class="active">
+			<li class="active">
+				<a class="waves-attach" data-toggle="tab" href="#mikualipay"><object data="/theme/material/css/fonts/mikualipay.svg" type="image/svg+xml" width="20" height="20" ></object>&nbsp;支付宝支付</a>
+			</li>
+			<li>
+				<a class="waves-attach" data-toggle="tab" href="#mikuwechat"><object data="/theme/material/css/fonts/mikuwechat.svg" type="image/svg+xml" width="20" height="20" ></object>&nbsp;微信钱包支付</a>
+			</li>
+			<li>
+				<a class="waves-attach" data-toggle="tab" href="#mikuqqpay"><object data="/theme/material/css/fonts/mikuqqpay.svg" type="image/svg+xml" width="20" height="20" ></object>&nbsp;QQ钱包支付</a>
+			</li>
+			<li>
+				<a class="waves-attach" data-toggle="tab" href="#mikuhuabei"><object data="/theme/material/css/fonts/mikualipay.svg" type="image/svg+xml" width="20" height="20" ></object>&nbsp;蚂蚁花呗支付</a>
+			</li>
+
+	</ul>
+</nav>
+<div class="tab-pane fade active in" id="mikualipay">
+		<form name="codepay" action="/user/code/codepay" method="get">
+			<div class="card-inner">
+            <p class="card-heading">请输入充值金额</p>
+				<input class="form-control" id="price" name="price" placeholder="输入充值金额后，点击应用图标或回车即可" autofocus="autofocus" type="number" min="0.01" max="1000" step="0.01" required="required">
+				</div>
+				<button class="btn btn-brand waves-attach waves-effect" id="btnSubmit" type="submit" name="type" value="1" style="margin-left:20px;">&nbsp;支付宝支付&nbsp;</button>
+</form>
+</div>
+
+<div class="tab-pane fade" id="mikuwechat">
+		<form name="codepay" action="/user/code/codepay" method="get">
+			<div class="card-inner">
+            <p class="card-heading">请输入充值金额</p>
+			<input class="form-control" id="price" name="price" placeholder="输入充值金额后，点击应用图标或回车即可" autofocus="autofocus" type="number" min="0.01" max="1000" step="0.01" required="required">
+		</div>
+		<button class="btn btn-brand waves-attach waves-effect" id="btnSubmit" type="submit" name="type" value="3" style="margin-left:20px;">&nbsp;微信钱包支付&nbsp;</button>
+</form>
+</div>
+<div class="tab-pane fade" id="mikuqqpay">
+		<form name="codepay" action="/user/code/codepay" method="get">
+			<div class="card-inner">
+            <p class="card-heading">请输入充值金额</p>
+			<input class="form-control" id="price" name="price" placeholder="输入充值金额后，点击应用图标或回车即可" autofocus="autofocus" type="number" min="0.01" max="1000" step="0.01" required="required">
+		</div>
+		<button class="btn btn-brand waves-attach waves-effect" id="btnSubmit" type="submit" name="type" value="2" style="margin-left:20px;">&nbsp;QQ钱包支付&nbsp;</button>
+</form>
+</div>
+<div class="tab-pane fade" id="mikuhuabei">
+	<form action="/user/code/yft" method="post" >
+		<div class="card-inner">
+			<p class="card-heading">请输入充值金额</p>
+			<input class="form-control" id="price" name="price" placeholder="输入充值金额后，点击应用图标或回车即可" autofocus="autofocus" type="number" min="0.01" max="1000" step="0.01" required="required">
+		</div>
+		<button type="submit" class="btn btn-brand waves-attach waves-effect" id="yftCoin" style="margin-left:20px;">&nbsp;蚂蚁花呗支付&nbsp;</button>
+</form>
+</div>
+';
+    }
+  
     private static function spay_html($user)
     {
         return '
@@ -717,23 +780,27 @@ class Pay
                 //更新返利
                 if ($user->ref_by!=""&&$user->ref_by!=0&&$user->ref_by!=null) {
                     $gift_user=User::where("id", "=", $user->ref_by)->first();
-                    $gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
-                    $gift_user->save();
-
+                  if ($gift_user->class!=0)
+                  	{
+                    	$gift_user->money=($gift_user->money+($codeq->number*(Config::get('code_payback')/100)));
+                    	$gift_user->save();
+                  	}
                     $Payback=new Payback();
-                    $Payback->total=$total;
+                    $Payback->total=$price;
                     $Payback->userid=$user->id;
                     $Payback->ref_by=$user->ref_by;
                     $Payback->ref_get=$codeq->number*(Config::get('code_payback')/100);
                     $Payback->datetime=time();
+                  	
                     $Payback->save();
+                  //清空返利
+                $user=User::find($pay_id);
+				$user->ref_by=0;
+                $user->save();  
+                  
                 }
             exit('success'); //返回成功 不要删除哦
             }
-        }
-        if ($codeq!=null){
-
-        return;
         }
     }
 
@@ -797,6 +864,8 @@ class Pay
             case 'f2fpay':
                 return Pay::f2fpay_callback();
             case 'codepay':
+                return Pay::codepay_callback();
+            case 'mikupay':
                 return Pay::codepay_callback();
             default:
                 return "";
