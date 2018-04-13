@@ -21,7 +21,7 @@
 		<div class="container">
 			<section class="content-inner margin-top-no">
 				<div class="row">
-         <div class="col-xs-6 col-sm-6 col-lg-4 col-md-4">
+<div class="col-xs-12 col-sm-12 col-lg-4 col-md-4">
 	<div class="card">
 	<div class="card-main">
 	<div class="card-inner">
@@ -41,7 +41,7 @@
 	</div>
 	</div>
 				    {if $pmw!=''}
-					<div class="col-xs-6 col-sm-6 col-lg-4 col-md-4">
+					<div class="col-xs-6 col-sm-6col-lg-4 col-md-4">
 						<div class="card margin-bottom-no">
 							<div class="card-main">
 								<div class="card-inner">
@@ -49,7 +49,7 @@
 								</div>
 							</div>
 						</div>
-					</div>
+                  </div>
 
 					{/if}
 
@@ -59,11 +59,10 @@
 								<div class="card-inner">
 									<div class="card-inner">
 										<p class="card-heading">充值码</p>
-										<i class="icon icon-lg">view_compact</i>&nbsp;仪表盘
-							<p>当前余额：{$user->money} 元</p>
 										<div class="form-group form-group-label">
 											<label class="floating-label" for="code">充值码</label>
 											<input class="form-control" id="code" type="text">
+                                          &nbsp
 										</div>
 									</div>
 									<div class="card-action">
@@ -75,7 +74,7 @@
 							</div>
 						</div>
 					</div>
-
+<!--
 					<div class="col-lg-12 col-md-12">
 						<div class="card margin-bottom-no">
 							<div class="card-main">
@@ -87,7 +86,7 @@
 												<table class="table table-hover">
 													<tr>
 													<!--<th>ID</th> -->
-														<th>代码</th>
+												<!--		<th>代码</th>
 														<th>类型</th>
 														<th>操作</th>
 														<th>使用时间</th>
@@ -97,7 +96,7 @@
 														{if $code->type!=-2}
 															<tr>
 															<!--	<td>#{$code->id}</td>  -->
-																<td>{$code->code}</td>
+														<!--		<td>{$code->code}</td>
 																{if $code->type==-1}
 																<td>金额充值</td>
 																{/if}
@@ -136,6 +135,7 @@
 							</div>
 						</div>
 					</div>
+      -->
 					<div aria-hidden="true" class="modal modal-va-middle fade" id="readytopay" role="dialog" tabindex="-1">
 						<div class="modal-dialog modal-xs">
 							<div class="modal-content">
